@@ -95,25 +95,61 @@
     .login-container a:hover {
       text-decoration: underline;
     }
+
+    .alert {
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .alert-danger {
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #ffcdd2;
+    }
+
+    .alert-success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #c8e6c9;
+    }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <h2>Login Admin</h2>
+    <h2>Login Admin Elsabrin</h2>
+    
+    <!-- Tampilkan error messages -->
+    @if($errors->any())
+      <div class="alert alert-danger">
+        @foreach($errors->all() as $error)
+          <p>{{ $error }}</p>
+        @endforeach
+      </div>
+    @endif
+
+    @if(session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+    @endif
+
     <form action="{{ route('login') }}" method="POST">
-    @csrf
-    <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Masukkan username" required>
-    </div>
-    <div class="form-group">
+      @csrf
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Masukkan email" value="{{ old('email') }}" required autofocus>
+      </div>
+      <div class="form-group">
         <label for="password">Kata Sandi</label>
         <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
-    </div>
-    <button type="submit" class="btn-login">Masuk</button>
-</form>
+      </div>
+      <button type="submit" class="btn-login">Masuk</button>
+    </form>
 
     <p>Lupa kata sandi? <a href="#">Reset di sini</a></p>
+    <p>Kembali ke <a href="{{ url('/') }}">halaman utama</a></p>
   </div>
 </body>
 </html>

@@ -700,5 +700,71 @@
             });
         });
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Navigation between sections
+        const navLinks = document.querySelectorAll('.nav-link');
+        const goToSectionLinks = document.querySelectorAll('.go-to-section');
+        const sections = document.querySelectorAll('.dashboard-section');
+        
+        function activateSection(sectionId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active nav link
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === sectionId.replace('-section', '')) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                activateSection(section + '-section');
+            });
+        });
+        
+        goToSectionLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                activateSection(section + '-section');
+                
+                // Also activate the corresponding nav link
+                navLinks.forEach(navLink => {
+                    navLink.classList.remove('active');
+                    if (navLink.getAttribute('data-section') === section) {
+                        navLink.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // Handle modals
+        const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+        const userModal = new bootstrap.Modal(document.getElementById('userModal'));
+        
+        // Open modals when buttons are clicked
+        document.querySelectorAll('[data-bs-target="#productModal"]').forEach(button => {
+            button.addEventListener('click', function() {
+                productModal.show();
+            });
+        });
+        
+        document.querySelectorAll('[data-bs-target="#userModal"]').forEach(button => {
+            button.addEventListener('click', function() {
+                userModal.show();
+            });
+        });
+    });
+</script>
+    
 </body>
 </html>

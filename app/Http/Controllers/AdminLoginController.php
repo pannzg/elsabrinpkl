@@ -34,6 +34,6 @@ class AdminLoginController extends Controller
         Auth::guard('admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/loginadmin');
+        return redirect('/admin/login');
     }
 }

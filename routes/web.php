@@ -7,63 +7,96 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\DashboardUserController;
 
 // ==============================
-// Public (bisa diakses semua orang)
+// HOME & PUBLIC
 // ==============================
-Route::get('/kategori', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/', [DashboardUserController::class, 'index'])->name('user.dashboard');
+Route::get('/kategori/{id}', [DashboardUserController::class, 'showCategory'])->name('user.produk.kategori');
+
+// Redirect ke login user saat auth gagal
+Route::get('/login', function () {
+    return redirect()->route('user.login');
+})->name('login');
+
 
 // ==============================
-// Login User
+// USER AUTH (Guard: web)
 // ==============================
-Route::get('/loginuser', [AuthController::class, 'loginuser'])->name('login.user');
-Route::post('/loginuser', [AuthController::class, 'login']);
-Route::post('/logoutuser', [AuthController::class, 'logout'])->name('logout.user');
+Route::prefix('user')->name('user.')->group(function () {
+    // Form login user
+    Route::get('/login', [AuthController::class, 'loginuser'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+    // Register user
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+    // Logout user
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Kategori untuk user
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/{id}', [CategoryController::class, 'showUser'])->name('categories.show');
+});
 
 // ==============================
-// Login Admin
+// ADMIN AUTH (Guard: admin)
 // ==============================
-Route::get('/loginadmin', [AdminLoginController::class, 'loginadmin'])->name('login');
-Route::post('/loginadmin', [AdminLoginController::class, 'login']);
-Route::post('/logoutadmin', [AdminLoginController::class, 'logout'])->name('admin.logout');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminLoginController::class, 'loginadmin'])->name('login');
+    Route::post('/login', [AdminLoginController::class, 'login'])->name('login.post');
+    Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
+});
 
 // ==============================
-// Admin Routes - DIKELOMPOKKAN DENGAN BENAR
+// ADMIN PANEL (Guard: admin)
 // ==============================
 Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
-    
-    // Dashboard`
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    // Products Resource - ROUTE MANUAL YANG BENAR
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-    // Users Resource - ROUTE MANUAL JUGA UNTUK KONSISTENSI
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-    
+    // Products
+    Route::resource('products', ProductController::class);
+    Route::get('/products-dashboard', [ProductController::class, 'index'])->name('products.dashboard');
+
+    // Users
+    Route::resource('users', UserController::class);
+
     // Settings
-    Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
-    Route::post('/settings', [DashboardController::class, 'updateSettings'])->name('settings.update');
-    
-    // Logout
-    Route::post('/logout', [DashboardController::class, 'logout'])->name('logout');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+
+    // Categories (CRUD Admin)
+    Route::get('/categories', [CategoryController::class, 'adminIndex'])->name('categories.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{id}', [CategoryController::class, 'showAdmin'])->name('categories.show');
+    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 // ==============================
-// Public Home Page
+// KATEGORI (Public tanpa login)
 // ==============================
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/kategori', [CategoryController::class, 'index'])->name('categories.public.index');
+Route::get('/kategori/{id}', [CategoryController::class, 'showPublic'])->name('categories.public.show');
+
+// routes/web.php
+Route::get('/tentang', function () {
+    return view('tentang');
+})->name('tentang');
+
+Route::get('/kontak', function () {
+    return view('kontak');
+})->name('kontak');
+
+// Route untuk kirim form
+Route::post('/kontak/kirim', function (Request $request) {
+    // Bisa tambahkan validasi & simpan / kirim email di sini
+    // Contoh dummy: tampilkan pesan sukses
+    return back()->with('success', 'Pesan berhasil dikirim!');
+})->name('user.kontak.kirim');

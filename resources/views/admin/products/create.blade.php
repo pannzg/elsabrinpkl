@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="dashboard-section active" id="products-section">
@@ -10,7 +10,6 @@
             <div class="card-body">
                 <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -20,13 +19,11 @@
                             
                             <div class="mb-3">
                                 <label class="form-label">Kategori</label>
-                                <select class="form-select" name="category" required>
+                                <select class="form-select" name="category_id" required>
                                     <option value="">Pilih Kategori</option>
-                                    <option value="Dress">Dress</option>
-                                    <option value="Blouse">Blouse</option>
-                                    <option value="Skirt">Skirt</option>
-                                    <option value="Celana">Celana</option>
-                                    <option value="Aksesoris">Aksesoris</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             

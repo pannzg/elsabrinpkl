@@ -135,7 +135,7 @@
       </div>
     @endif
 
-    <form action="{{ route('login') }}" method="POST">
+    <form action="{{ route('admin.login') }}" method="POST">
       @csrf
       <div class="form-group">
         <label for="email">Email</label>

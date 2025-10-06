@@ -64,7 +64,7 @@
     <!-- Info Kontak -->
     <div class="text-center mt-5">
         <h5 class="fw-bold" style="color:#ff6b81;">Atau hubungi kami langsung:</h5>
-        <p class="text-muted" style="font-size:1rem;">📞 Telepon: 0812-XXXX-XXXX | ✉ Email: info@elsabrinbutik.com</p>
+        <p class="text-muted" style="font-size:1rem;">📞 Telepon: 0812-3456-7890 | ✉ Email: info@elsabrinbutik.com</p>
         <a href="https://wa.me/628119410388" target="_blank" class="btn btn-success rounded-pill px-4 mt-3">Chat via WhatsApp</a>
     </div>
 </div>

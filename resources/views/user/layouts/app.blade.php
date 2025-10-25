@@ -175,7 +175,6 @@
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link" href="/">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link" href="/kategori">Kategori</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/produk">Produk</a></li>
                     <li class="nav-item"><a class="nav-link" href="/tentang">Tentang</a></li>
                     <li class="nav-item"><a class="nav-link" href="/kontak">Kontak</a></li>
                 </ul>

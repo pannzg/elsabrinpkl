@@ -40,7 +40,7 @@
 
         {{-- Stok --}}
         <div class="mb-3">
-            <label for="stock" class="form-label">Stok</label>
+            <label for="stock" class="form-label">Stok Total</label>
             <input type="number" 
                    name="stock" 
                    id="stock" 
@@ -82,6 +82,22 @@
             @error('description')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
+        </div>
+
+        {{-- Stok per Ukuran --}}
+        <h5 class="mt-4">Stok per Ukuran</h5>
+        @php
+            $sizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+        @endphp
+        <div class="row">
+            @foreach($sizes as $size)
+                <div class="col-md-2 mb-3">
+                    <label>{{ $size }}</label>
+                    <input type="number" name="sizes[{{ $size }}]" 
+                           value="{{ old('sizes.' . $size) ?? ($product->sizes[$size] ?? 0) }}" 
+                           class="form-control">
+                </div>
+            @endforeach
         </div>
 
         {{-- Upload Gambar --}}
